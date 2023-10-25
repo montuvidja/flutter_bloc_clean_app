@@ -33,13 +33,20 @@ class _OnBoardState extends State<OnBoard> {
                 PageView(
                   controller: onBoardViewModel.pageController,
                   children: const [
-                   OnBoardFirst(),
+                    OnBoardFirst(),
                     OnBoardSecond(),
                     OnBoardThird()
                   ],
                 ).expand(),
                 63.h.heightBox,
-                RoundedPrimaryButton(title: MyStrings.getStarted, voidCallback: (){AutoRouter.of(context).push(const AuthRoute());}),
+                RoundedPrimaryButton(
+                  title: MyStrings.getStarted,
+                  voidCallback: () {
+                    AutoRouter.of(context).push(
+                      const AuthRoute(),
+                    );
+                  },
+                ),
                 30.heightBox,
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,

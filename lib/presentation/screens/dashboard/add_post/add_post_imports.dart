@@ -1,4 +1,3 @@
-import 'package:auto_route/annotations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_clean_app/data/core/constants/my_colors.dart';
 import 'package:flutter_bloc_clean_app/data/core/constants/my_strings.dart';

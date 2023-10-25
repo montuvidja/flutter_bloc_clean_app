@@ -13,7 +13,6 @@ class AppRouter extends $AppRouter {
     AutoRoute(page: RegisterRoute.page),
     AutoRoute(page: DashBoardRoute.page),
     AutoRoute(page: CategoriesRoute.page),
-    AutoRoute(page: AddPostsRoute.page),
     AutoRoute(page: TagsRoute.page),
     AutoRoute(page: AddCategoryRoute.page),
     AutoRoute(page: HomeDetailRoute.page),
