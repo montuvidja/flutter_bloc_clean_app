@@ -25,3 +25,22 @@ class ProfileLogoutSuccessState extends ProfileState {
   @override
   List<Object?> get props => [messageModel];
 }
+
+class UserPostLoadingState extends ProfileState {}
+
+class UserPostErrorState extends ProfileState {
+  final String errorMessage;
+
+  UserPostErrorState(this.errorMessage);
+  @override
+  List<Object?> get props => [errorMessage];
+}
+
+class UserPostSuccessState extends ProfileState {
+  final ProfileModel profileModel;
+
+  UserPostSuccessState(this.profileModel);
+
+  @override
+  List<Object?> get props => [profileModel];
+}

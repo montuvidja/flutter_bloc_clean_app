@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc_clean_app/data/core/themes/app_theme.dart';
 import 'package:flutter_bloc_clean_app/data/repositories/auth_repo.dart';
-import 'package:flutter_bloc_clean_app/data/repositories/home_repo.dart';
+import 'package:flutter_bloc_clean_app/data/repositories/post_repo.dart';
 import 'package:flutter_bloc_clean_app/data/repositories/repository.dart';
 import 'package:flutter_bloc_clean_app/data/repositories/tag_repo.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -14,7 +14,7 @@ void main() {
     create: (context) => Repository(
       tagsRepo: TagsRepo(),
       authRepo: AuthRepo(),
-      homeRepo: HomeRepo(),
+      postRepo: PostRepo(),
     ),
     child: MyApp(),
   ));

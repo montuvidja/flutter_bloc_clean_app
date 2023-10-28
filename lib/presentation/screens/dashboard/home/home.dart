@@ -20,7 +20,7 @@ class _HomeState extends State<Home> {
   @override
   void initState() {
     homeCubit = HomeCubit(repository: context.read<Repository>());
-    homeCubit.getHomePosts();
+    homeCubit.getLatestPosts();
     super.initState();
   }
 
@@ -56,7 +56,7 @@ class _HomeState extends State<Home> {
                           fit: BoxFit.cover,
                         ).cornerRadius(20).pSymmetric(h: 10);
                       }),
-                /*  SmoothPageIndicator(
+                  /*  SmoothPageIndicator(
                     controller: viewModel.pageController,
                     count: headerScrollView.length,
                     effect: const WormEffect(
@@ -113,11 +113,20 @@ class _HomeState extends State<Home> {
                                 Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    latestPost.title!.text
+                                    /*latestPost.title!.text
                                         .size(16)
                                         .fontWeight(FontWeight.w700)
+                                        .ellipsis
                                         .maxLines(2)
-                                        .make(),
+                                        .make(),*/
+                                    Text(
+                                      latestPost.title!.toString(),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                      style: const TextStyle(
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w700,),
+                                    ),
                                     5.h.heightBox,
                                     Row(
                                       crossAxisAlignment:

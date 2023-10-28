@@ -11,11 +11,10 @@ class HomeCubit extends Cubit<HomeState> {
   final Repository repository;
   HomeCubit({required this.repository}) : super(HomeInitial());
 
-  getHomePosts() async {
+  getLatestPosts() async {
     try {
-      print("====== Home Post ======");
       emit(HomeLoadingState());
-      var data = await repository.homeRepo.getHomePost();
+      var data = await repository.postRepo.getLatestPost();
       emit(HomeLoadedState(data));
     } catch (e) {
       emit(HomeErrorState(e.toString()));

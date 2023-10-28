@@ -4,6 +4,7 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc_clean_app/data/models/message_model.dart';
 import 'package:flutter_bloc_clean_app/data/utils/utils.dart';
 import 'package:flutter_bloc_clean_app/presentation/routes/routes_import.gr.dart';
+import 'package:flutter_bloc_clean_app/presentation/screens/dashboard/profile/profile_model.dart';
 import 'package:meta/meta.dart';
 import 'package:velocity_x/velocity_x.dart';
 
@@ -24,6 +25,18 @@ class ProfileCubit extends Cubit<ProfileState> {
         VxToast.show(context, msg: data.message.toString());
       }
     } catch (e) {
+      print(e);
+    }
+  }
+
+  getUserPost() async {
+    try {
+      emit(UserPostLoadingState());
+      var data = await repository.postRepo.getUserPost();
+      emit(UserPostSuccessState(data));
+
+    } catch (e) {
+      emit(UserPostErrorState(e.toString()));
       print(e);
     }
   }

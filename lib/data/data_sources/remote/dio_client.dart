@@ -17,12 +17,18 @@ class DioClient {
 
   final Dio _dio = Dio(baseOptions);
 
+  Options options = Options();
 
-  Future<Response> getRequest({required String path}) async {
+  Future<Response> getRequest({required String path, bool isTokenRequired = false}) async {
+
+    if(isTokenRequired == true){
+      var token = await Utils.getToken();
+      options.headers = baseOptions.headers..addAll({"Authorization" : "Bearer $token"});
+    }
+
     try {
-
      _dio.interceptors.add(PrettyDioLogger());
-      Response response = await _dio.get(path);
+      Response response = await _dio.get(path,options: options);
 
       return response;
     } on DioException catch (e) {
