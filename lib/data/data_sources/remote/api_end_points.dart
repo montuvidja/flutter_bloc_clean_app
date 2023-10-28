@@ -1,4 +1,3 @@
-import 'package:flutter_bloc_clean_app/data/data_sources/remote/api_constant.dart';
 
 class ApiEndPointUrls{
   ApiEndPointUrls._();
@@ -7,5 +6,7 @@ class ApiEndPointUrls{
   static const String posts = "posts";
   static const String categories = "categories";
   static const String login = "login";
+  static const String register = "register";
+  static const String logout = "logout";
 
 }

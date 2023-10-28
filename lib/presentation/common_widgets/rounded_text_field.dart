@@ -1,6 +1,6 @@
 part of 'common_widget_imports.dart';
 
-class RoundedCornerTextField extends StatefulWidget {
+class RoundedCornerTextField extends StatelessWidget {
   const RoundedCornerTextField({
     super.key,
     this.prefixIcon,
@@ -8,7 +8,10 @@ class RoundedCornerTextField extends StatefulWidget {
     this.obscureText = false,
     this.text = "",
     this.hint = "",
-    this.borderColor = MyColors.primaryColor
+    this.borderColor = MyColors.primaryColor,
+    this.onChanged,
+    this.validator,
+    this.controller
   });
 
   final Widget? prefixIcon;
@@ -17,23 +20,26 @@ class RoundedCornerTextField extends StatefulWidget {
   final String text;
   final String hint;
   final Color borderColor;
+  final ValueChanged<String>? onChanged;
+  final String? Function(String?)? validator;
+  final TextEditingController? controller;
 
-  @override
-  State<RoundedCornerTextField> createState() => _RoundedCornerTextFieldState();
-}
 
-class _RoundedCornerTextFieldState extends State<RoundedCornerTextField> {
+
   @override
   Widget build(BuildContext context) {
     return VxTextField(
-      borderColor: widget.borderColor,
+      borderColor: borderColor,
       borderRadius: 10,
       fillColor: Colors.transparent,
       borderType: VxTextFieldBorderType.roundLine,
-      prefixIcon: widget.prefixIcon,
-      isPassword: widget.isPassword,
-      obscureText: widget.obscureText,
-      hint: widget.hint,
+      prefixIcon: prefixIcon,
+      isPassword: isPassword,
+      obscureText: obscureText,
+      hint: hint,
+      onChanged: onChanged,
+      validator: validator,
+      controller: controller,
     );
   }
 }

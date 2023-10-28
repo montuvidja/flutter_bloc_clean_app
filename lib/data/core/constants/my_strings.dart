@@ -12,6 +12,7 @@ class MyStrings {
   static const String register = "Register";
   static const String authContent = "Explore the world,\nBillions of Thoughts.";
   static const String email = "Email";
+  static const String name = "Name";
   static const String password = "Password";
   static const String confirmPassword = "Confirm Password";
   static const String rememberMe = "Remember me";
@@ -29,4 +30,11 @@ class MyStrings {
   static const String update = "Update";
   static const String addCategory = "Add Category";
   static const String addPost = "Add Post";
+  static const String enterEmail = "Enter email";
+  static const String enterValidEmail = "Enter valid email";
+  static const String enterPassword = "Enter Password";
+  static const String enterValidPassword = "Enter valid password";
+  static const String enterName = "Enter Name";
+  static const String enterValidName = "Enter valid Name";
+
 }

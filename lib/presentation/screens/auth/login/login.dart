@@ -9,6 +9,14 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
+  late AuthCubit authCubit;
+
+  @override
+  void initState() {
+    authCubit = AuthCubit(repository: context.read<Repository>());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
@@ -17,19 +25,21 @@ class _LoginState extends State<Login> {
         backgroundColor: MyColors.primaryColor,
         resizeToAvoidBottomInset: false,
         body: FadedScaleAnimation(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: size.height * 0.2,
-                  child: Assets.images.mainLogo.image(
-                    color: Colors.white,
-                    height: 42.h,
-                    width: 139.w,
-                  ),
+            child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              SizedBox(
+                height: size.height * 0.2,
+                child: Assets.images.mainLogo.image(
+                  color: Colors.white,
+                  height: 42.h,
+                  width: 139.w,
                 ),
-                Container(
+              ),
+              Form(
+                key: authCubit.fromKey,
+                child: Container(
                   height: MediaQuery.sizeOf(context).height,
                   width: MediaQuery.sizeOf(context).width,
                   decoration: const BoxDecoration(
@@ -54,13 +64,22 @@ class _LoginState extends State<Login> {
                             .fontWeight(FontWeight.w500)
                             .make(),
                         8.h.heightBox,
-                        const RoundedCornerTextField(
-                          prefixIcon: Icon(
+                        RoundedCornerTextField(
+                          prefixIcon: const Icon(
                             Icons.email_outlined,
                             color: MyColors.primaryColor,
                           ),
                           isPassword: false,
                           obscureText: false,
+                          controller: authCubit.emailController,
+                          validator: (email) {
+                            if (email!.trim().isEmpty) {
+                              return MyStrings.enterEmail;
+                            } else if (!email.trim().isValidEmail) {
+                              return MyStrings.enterValidEmail;
+                            }
+                            return null;
+                          },
                         ),
                         15.h.heightBox,
                         MyStrings.password.text
@@ -68,13 +87,23 @@ class _LoginState extends State<Login> {
                             .fontWeight(FontWeight.w500)
                             .make(),
                         8.h.heightBox,
-                        const RoundedCornerTextField(
-                          prefixIcon: Icon(
+                        RoundedCornerTextField(
+                          prefixIcon: const Icon(
                             Icons.lock_outline,
                             color: MyColors.primaryColor,
                           ),
                           isPassword: true,
                           obscureText: true,
+                          controller: authCubit.passwordController,
+                          validator: (password) {
+                            if (password!.trim().isEmpty) {
+                              return MyStrings.enterPassword;
+                            } else if (password.trim().length < 5) {
+                              return MyStrings.enterValidPassword;
+                            }
+
+                            return null;
+                          },
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -100,12 +129,21 @@ class _LoginState extends State<Login> {
                           ],
                         ),
                         30.h.heightBox,
-                        RoundedPrimaryButton(
-                            title: MyStrings.login,
-                            voidCallback: () {
-                              AutoRouter.of(context)
-                                  .push(const DashBoardRoute());
-                            }),
+                        BlocBuilder<AuthCubit, AuthState>(
+                          bloc: authCubit,
+                          builder: (context, state) {
+                            return RoundedPrimaryButton(
+                              title: MyStrings.login,
+                              voidCallback: () {
+                                if (authCubit.fromKey.currentState!
+                                    .validate()) {
+                                  authCubit.userLogin(context);
+                                }
+                              },
+                              isLoading: state is LoginLoadingState,
+                            );
+                          },
+                        ),
                         20.h.heightBox,
                         MyStrings.notHaveAccount.richText
                             .size(14)
@@ -114,7 +152,7 @@ class _LoginState extends State<Login> {
                           TextSpan(
                               recognizer: TapGestureRecognizer()
                                 ..onTap = () => AutoRouter.of(context)
-                                    .push(const RegisterRoute()),
+                                    .replace(const RegisterRoute()),
                               text: MyStrings.signUp,
                               style:
                                   const TextStyle(fontWeight: FontWeight.w700))
@@ -122,11 +160,11 @@ class _LoginState extends State<Login> {
                       ],
                     ),
                   ),
-                )
-              ],
-            ),
+                ),
+              )
+            ],
           ),
-        ),
+        )),
       ),
     );
   }

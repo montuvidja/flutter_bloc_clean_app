@@ -24,6 +24,8 @@ import 'package:flutter_bloc_clean_app/presentation/screens/dashboard/dashboard_
     as _i4;
 import 'package:flutter_bloc_clean_app/presentation/screens/dashboard/home/home_imports.dart'
     as _i5;
+import 'package:flutter_bloc_clean_app/presentation/screens/dashboard/home/home_model.dart'
+    as _i13;
 import 'package:flutter_bloc_clean_app/presentation/screens/dashboard/tags/tags_imports.dart'
     as _i10;
 import 'package:flutter_bloc_clean_app/presentation/screens/onboard/onboard_imports.dart'
@@ -66,7 +68,7 @@ abstract class $AppRouter extends _i11.RootStackRouter {
         routeData: routeData,
         child: _i5.HomeDetail(
           key: args.key,
-          postTitle: args.postTitle,
+          post: args.post,
         ),
       );
     },
@@ -164,13 +166,13 @@ class DashBoardRoute extends _i11.PageRouteInfo<void> {
 class HomeDetailRoute extends _i11.PageRouteInfo<HomeDetailRouteArgs> {
   HomeDetailRoute({
     _i12.Key? key,
-    required String postTitle,
+    required _i13.Post post,
     List<_i11.PageRouteInfo>? children,
   }) : super(
           HomeDetailRoute.name,
           args: HomeDetailRouteArgs(
             key: key,
-            postTitle: postTitle,
+            post: post,
           ),
           initialChildren: children,
         );
@@ -184,16 +186,16 @@ class HomeDetailRoute extends _i11.PageRouteInfo<HomeDetailRouteArgs> {
 class HomeDetailRouteArgs {
   const HomeDetailRouteArgs({
     this.key,
-    required this.postTitle,
+    required this.post,
   });
 
   final _i12.Key? key;
 
-  final String postTitle;
+  final _i13.Post post;
 
   @override
   String toString() {
-    return 'HomeDetailRouteArgs{key: $key, postTitle: $postTitle}';
+    return 'HomeDetailRouteArgs{key: $key, post: $post}';
   }
 }
 

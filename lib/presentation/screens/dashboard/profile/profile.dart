@@ -8,6 +8,14 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+
+  late ProfileCubit profileCubit;
+  @override
+  void initState() {
+    profileCubit = ProfileCubit(repository: context.read<Repository>());
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,7 +24,9 @@ class _ProfileState extends State<Profile> {
         automaticallyImplyLeading: false,
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              profileCubit.userLogout(context);
+            },
             icon: const Icon(
               FeatherIcons.logOut,
               color: MyColors.white,

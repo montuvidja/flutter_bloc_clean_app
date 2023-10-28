@@ -42,7 +42,7 @@ class _OnBoardState extends State<OnBoard> {
                 RoundedPrimaryButton(
                   title: MyStrings.getStarted,
                   voidCallback: () {
-                    AutoRouter.of(context).push(
+                    AutoRouter.of(context).replace(
                       const AuthRoute(),
                     );
                   },

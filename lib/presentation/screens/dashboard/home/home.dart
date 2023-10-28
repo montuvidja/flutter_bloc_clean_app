@@ -15,128 +15,166 @@ class _HomeState extends State<Home> {
     Assets.images.netflix.image(fit: BoxFit.fitWidth).cornerRadius(24),
   ];
 
+  late HomeCubit homeCubit;
+
+  @override
+  void initState() {
+    homeCubit = HomeCubit(repository: context.read<Repository>());
+    homeCubit.getHomePosts();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     HomeViewModel viewModel = HomeViewModel();
     return Scaffold(
         body: SafeArea(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              height: 220.h,
-              width: double.infinity,
-              child: PageView.builder(
-                itemCount: headerScrollView.length,
-                controller: viewModel.pageController,
-                itemBuilder: (BuildContext context, int index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 12.0, vertical: 12.0),
-                    child: headerScrollView[index],
-                  );
-                },
-                onPageChanged: (ini) {},
-              ),
-            ),
-            SmoothPageIndicator(
-              controller: viewModel.pageController,
-              count: headerScrollView.length,
-              effect: const WormEffect(
-                dotHeight: 10.0,
-                dotWidth: 10.0,
-                activeDotColor: MyColors.primaryColor,
-              ),
-            ),
-            8.h.heightBox,
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: BlocBuilder<HomeCubit, HomeState>(
+        bloc: homeCubit,
+        builder: (context, state) {
+          if (state is HomeLoadingState) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (state is HomeLoadedState) {
+            return SingleChildScrollView(
+              child: Column(
                 children: [
-                  MyStrings.latestPost.text.size(14.sp).make(),
-                  MyStrings.seeAll.text.size(14.sp).make(),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: ListView.builder(
-                shrinkWrap: true,
-                itemCount: 5,
-                physics: const NeverScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                  10.h.heightBox,
+                  VxSwiper.builder(
+                      autoPlay: true,
+                      enlargeCenterPage: true,
+                      itemCount: state.homeModel.popularPosts!.length,
+                      itemBuilder: (context, index) {
+                        var latestPost = state.homeModel.allPosts![index];
+                        var imagePath = latestPost.featuredimage
+                            .toString()
+                            .prepend("https://techblog.codersangam.com/")
+                            .replaceAll("public", "storage");
+                        return CachedNetworkImage(
+                          imageUrl: imagePath,
+                          fit: BoxFit.cover,
+                        ).cornerRadius(20).pSymmetric(h: 10);
+                      }),
+                /*  SmoothPageIndicator(
+                    controller: viewModel.pageController,
+                    count: headerScrollView.length,
+                    effect: const WormEffect(
+                      dotHeight: 10.0,
+                      dotWidth: 10.0,
+                      activeDotColor: MyColors.primaryColor,
+                    ),
+                  ),*/
+                  24.h.heightBox,
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
                     child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        GestureDetector(
-                          onTap: () => AutoRouter.of(context).push(
-                            HomeDetailRoute(
-                                postTitle:
-                                    "NetFlix Will charge money for password Sharing"),
-                          ),
-                          child: Assets.images.netflix
-                              .image(
-                                height: 110.h,
-                                width: 160.w,
-                                fit: BoxFit.cover,
-                              )
-                              .cornerRadius(24),
-                        ),
-                        10.h.widthBox,
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            "NetFlix Will charge money for password Sharing"
-                                .text
-                                .size(16.sp)
-                                .fontWeight(FontWeight.w700)
-                                .maxLines(2)
-                                .make(),
-                            5.h.heightBox,
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                const Icon(
-                                  FeatherIcons.clock,
-                                  size: 16,
-                                  color: Colors.blueGrey,
-                                ),
-                                5.h.widthBox,
-                                "6 month later"
-                                    .text
-                                    .size(10.sp)
-                                    .color(Colors.blueGrey)
-                                    .make()
-                              ],
-                            ),
-                            5.h.heightBox,
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                "129 views"
-                                    .text
-                                    .size(10.sp)
-                                    .color(Colors.blueGrey)
-                                    .make(),
-                                const Icon(
-                                  FeatherIcons.bookmark,
-                                  color: Colors.blueGrey,
-                                  size: 20,
-                                ),
-                              ],
-                            )
-                          ],
-                        ).expand(),
+                        MyStrings.latestPost.text.size(14.sp).make(),
+                        MyStrings.seeAll.text.size(14.sp).make(),
                       ],
                     ),
-                  );
-                },
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 12.0),
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: state.homeModel.allPosts!.length,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        var latestPost = state.homeModel.allPosts![index];
+                        var imagePath = latestPost.featuredimage
+                            .toString()
+                            .prepend("https://techblog.codersangam.com/")
+                            .replaceAll("public", "storage");
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8.0),
+                          child: FadedScaleAnimation(
+                            child: Row(
+                              children: [
+                                GestureDetector(
+                                  onTap: () => AutoRouter.of(context).push(
+                                    HomeDetailRoute(
+                                      post: latestPost,
+                                    ),
+                                  ),
+                                  child: Hero(
+                                    tag: Key(latestPost.id.toString()),
+                                    child: CachedNetworkImage(
+                                      imageUrl: imagePath,
+                                      height: 110.h,
+                                      width: 160.w,
+                                      fit: BoxFit.cover,
+                                    ).cornerRadius(24),
+                                  ),
+                                ),
+                                10.h.widthBox,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    latestPost.title!.text
+                                        .size(16)
+                                        .fontWeight(FontWeight.w700)
+                                        .maxLines(2)
+                                        .make(),
+                                    5.h.heightBox,
+                                    Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        const Icon(
+                                          FeatherIcons.clock,
+                                          size: 16,
+                                          color: Colors.blueGrey,
+                                        ),
+                                        5.h.widthBox,
+                                        latestPost.createdAt!
+                                            .timeAgo()
+                                            .toString()
+                                            .text
+                                            .size(10.sp)
+                                            .color(Colors.blueGrey)
+                                            .make()
+                                      ],
+                                    ),
+                                    5.h.heightBox,
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        "${latestPost.views} views"
+                                            .text
+                                            .size(10.sp)
+                                            .color(Colors.blueGrey)
+                                            .make(),
+                                        const Icon(
+                                          FeatherIcons.bookmark,
+                                          color: Colors.blueGrey,
+                                          size: 20,
+                                        ),
+                                      ],
+                                    )
+                                  ],
+                                ).expand(),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  )
+                ],
               ),
-            )
-          ],
-        ),
+            );
+          } else if (state is HomeErrorState) {
+            return Center(
+              child: Text(state.errorMessage),
+            );
+          } else {
+            return const SizedBox();
+          }
+        },
       ),
     ));
   }

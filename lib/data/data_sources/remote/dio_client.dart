@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:dio/dio.dart';
 import 'package:flutter_bloc_clean_app/data/data_sources/remote/api_constant.dart';
+import 'package:flutter_bloc_clean_app/data/utils/utils.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import 'dio_exception.dart';
@@ -25,7 +26,7 @@ class DioClient {
 
       return response;
     } on DioException catch (e) {
-      var error = DioExceptions.fromDioError(e.type).toString();
+      var error = DioExceptions.fromDioError(e).toString();
       print("Dio Error...$error");
       throw error;
     } catch (e) {
@@ -33,14 +34,20 @@ class DioClient {
     }
   }
 
-  Future<dynamic> postRequest(String uri, data) async {
+  Future<Response> postRequest({required String uri, dynamic data}) async {
 
+    _dio.interceptors.add(PrettyDioLogger());
+    var token = await Utils.getToken();
+    final options = Options(
+      headers: {"Authorization" : "Bearer $token"}
+    );
+  //  print("options... ${options.headers}");
     try {
-      final Response response = await _dio.post(uri,data: FormData.fromMap(data));
+      final Response response = await _dio.post(uri,data: data,options: options);
 
-      return response.data;
+      return response;
     } on DioException catch (e) {
-      var error =  DioExceptions.fromDioError(e.type).toString();
+      var error =  DioExceptions.fromDioError(e).toString();
       throw error;
 
     }
