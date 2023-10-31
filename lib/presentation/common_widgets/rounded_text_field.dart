@@ -36,6 +36,7 @@ class RoundedCornerTextField extends StatelessWidget {
       prefixIcon: prefixIcon,
       isPassword: isPassword,
       obscureText: obscureText,
+      value: text,
       hint: hint,
       onChanged: onChanged,
       validator: validator,

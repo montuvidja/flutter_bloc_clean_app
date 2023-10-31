@@ -29,3 +29,60 @@ class TagsErrorState extends TagsState {
   @override
   List<Object> get props => [errorMessage];
 }
+
+/* -------------   Tag Add State ---------------*/
+
+class TagsAddLoadingState extends TagsState {}
+
+class TagsAddedState extends TagsState {
+  final MessageModel messageModel;
+
+  const TagsAddedState(this.messageModel);
+
+  @override
+  List<Object> get props => [messageModel];
+}
+
+/* -------------   Tag update State ---------------*/
+
+class TagsUpdateLoadingState extends TagsState {}
+
+class TagsUpdateState extends TagsState {
+  final MessageModel messageModel;
+
+  const TagsUpdateState(this.messageModel);
+
+  @override
+  List<Object> get props => [messageModel];
+}
+
+class TagsUpdateErrorState extends TagsState {
+  final String errorMessage;
+
+  const TagsUpdateErrorState(this.errorMessage);
+
+  @override
+  List<Object> get props => [errorMessage];
+}
+
+/*------------ delete tag ------------------*/
+
+class TagsDeleteLoadingState extends TagsState {}
+
+class TagsDeletedState extends TagsState {
+  final MessageModel messageModel;
+
+  const TagsDeletedState(this.messageModel);
+
+  @override
+  List<Object> get props => [messageModel];
+}
+
+class TagsDeleteErrorState extends TagsState {
+  final String errorMessage;
+
+  const TagsDeleteErrorState(this.errorMessage);
+
+  @override
+  List<Object> get props => [errorMessage];
+}

@@ -1,6 +1,6 @@
 part of 'categories_imports.dart';
 
-@RoutePage()
+@RoutePage<Category>()
 class Categories extends StatefulWidget {
   const Categories({super.key});
 
@@ -9,20 +9,27 @@ class Categories extends StatefulWidget {
 }
 
 class _CategoriesState extends State<Categories> {
+  late CategoryCubit categoryCubit;
+
+  @override
+  void initState() {
+    categoryCubit = CategoryCubit(repository: context.read<Repository>());
+    categoryCubit.getAllCategories();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
         backgroundColor: MyColors.primaryColor,
-        title: MyStrings.categories.text
-            .size(16.sp)
-            .color(MyColors.white)
-            .make(),
+        title:
+            MyStrings.categories.text.size(16.sp).color(MyColors.white).make(),
         actions: [
           IconButton(
               onPressed: () {
-                AutoRouter.of(context).push(const AddCategoryRoute());
+               categoryCubit.gotoAddCategory(context);
               },
               icon: const Icon(
                 FeatherIcons.plus,
@@ -30,32 +37,67 @@ class _CategoriesState extends State<Categories> {
               ))
         ],
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: ListView.builder(
-          itemCount: 20,
-            itemBuilder: (context,index){
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 4.0),
-            child: Card(
-              color: MyColors.white,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Row(
-                  children: [
-                    "${index+1}".text.make(),
-                    10.w.widthBox,
-                    MyStrings.categories.text.size(16.sp).make(),
-                    const Spacer(),
-                    const Icon(FeatherIcons.edit2,size: 20,color: Colors.green,),
-                    12.w.widthBox,
-                    const Icon(FeatherIcons.trash2,size: 20, color: Colors.red,),
-                  ],
-                )
-              ),
-            ),
-          );
-        }),
+      body: BlocBuilder<CategoryCubit, CategoryState>(
+        bloc: categoryCubit,
+        builder: (context, state) {
+          if (state is CategoryLoadingState) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
+          else if (state is CategoryLoadedState) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: ListView.separated(
+                  itemCount: state.categoryModel.categories!.length,
+                  separatorBuilder: (context, index) => const SizedBox(height: 5,),
+                  itemBuilder: (context, index) {
+                    var category = state.categoryModel.categories![index];
+                    return Card(
+                      color: MyColors.white,
+                      child: ListTile(
+                        leading:  "${index + 1}".text.size(16.sp).make(),
+                        title:  category.title!.text.size(16.sp).make(),
+                        trailing: SizedBox(
+                          width: 100,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                onPressed: (){
+                                  categoryCubit.gotoUpdateCategory(context,category);
+                                },
+                                icon: const Icon(FeatherIcons.edit2,
+                                  color: Colors.green,),
+                              ),
+                              IconButton(
+                                onPressed: () {
+                                  categoryCubit.deleteCategory(category.id.toString(),index,context);
+                                },
+                                icon: const Icon(
+                                  FeatherIcons.trash2,
+                                  color: Colors.red,
+                                ),
+                              )
+                            ],
+                          ),
+                        ),
+                        onTap: () {
+                          AutoRouter.of(context).pop<Category>(category);
+                        },
+                      )
+                    );
+                  }),
+            );
+          }
+          else if (state is CategoryErrorState) {
+            return Center(
+              child: Text(state.errorMessage),
+            );
+          }
+          else {
+            return const SizedBox();
+          }
+        }
       ),
     );
   }

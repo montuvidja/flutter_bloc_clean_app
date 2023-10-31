@@ -18,12 +18,19 @@ class _LoginState extends State<Login> {
   }
 
   @override
+  void dispose() {
+    authCubit.emailController.dispose();
+    authCubit.passwordController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
     return SafeArea(
       child: Scaffold(
         backgroundColor: MyColors.primaryColor,
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: FadedScaleAnimation(
             child: SingleChildScrollView(
           child: Column(

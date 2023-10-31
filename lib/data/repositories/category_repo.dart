@@ -1,36 +1,35 @@
-import 'package:flutter_bloc_clean_app/data/models/message_model.dart';
-
-import '../../presentation/screens/dashboard/tags/tags_imports.dart';
+import 'package:flutter_bloc_clean_app/data/data_sources/remote/dio_client.dart';
+import '../../presentation/screens/dashboard/category/category_model.dart';
 import '../data_sources/remote/api_end_points.dart';
-import '../data_sources/remote/dio_client.dart';
+import '../models/message_model.dart';
 
-class TagsRepo extends DioClient {
-  TagsRepo();
+class CategoryRepo extends DioClient{
+  CategoryRepo();
 
-  Future<TagsModel> getAllTags() async {
+  Future<CategoryModel> getAllCategories() async {
     try {
-      var response = await getRequest(path: ApiEndPointUrls.tags);
+      var response = await getRequest(path: ApiEndPointUrls.categories);
 
       if(response.statusCode == 200){
-        final finalResponseData = TagsModel.fromJson(response.data);
+        final finalResponseData = CategoryModel.fromJson(response.data);
         return finalResponseData;
       } else {
-        TagsModel();
+        CategoryModel();
       }
     } on Exception {
-      TagsModel();
+      CategoryModel();
     }
 
-    return TagsModel();
+    return CategoryModel();
   }
 
-  Future<MessageModel> addNewTag(String title, String slug) async {
+  Future<MessageModel> addNewCategory(String title, String slug) async {
     try {
       Map<String, String> body = {
         "title" : title,
         "slug" : slug
       };
-      var response = await postRequest(uri: ApiEndPointUrls.addTags, data:body, isTokenRequired: true);
+      var response = await postRequest(uri: ApiEndPointUrls.addCategory, data:body, isTokenRequired: true);
 
       if(response.statusCode == 200){
         final finalResponseData = MessageModel.fromJson(response.data);
@@ -45,14 +44,14 @@ class TagsRepo extends DioClient {
     return MessageModel();
   }
 
-  Future<MessageModel> updateTag(String id,String title, String slug) async {
+  Future<MessageModel> updateCategory(String id,String title, String slug) async {
     try {
       Map<String, String> body = {
         "id" : id,
         "title" : title,
         "slug" : slug
       };
-      var response = await postRequest(uri: ApiEndPointUrls.updateTags, data:body, isTokenRequired: true);
+      var response = await postRequest(uri: ApiEndPointUrls.updateCategory, data:body, isTokenRequired: true);
 
       if(response.statusCode == 200){
         final finalResponseData = MessageModel.fromJson(response.data);
@@ -71,7 +70,7 @@ class TagsRepo extends DioClient {
   Future<MessageModel> deleteTag(String id) async {
     try {
 
-      var response = await postRequest(uri: "${ApiEndPointUrls.deleteTags}/$id", isTokenRequired: true);
+      var response = await postRequest(uri: "${ApiEndPointUrls.deleteCategory}/$id", isTokenRequired: true);
 
       if(response.statusCode == 200){
         final finalResponseData = MessageModel.fromJson(response.data);
@@ -85,4 +84,5 @@ class TagsRepo extends DioClient {
 
     return MessageModel();
   }
+
 }

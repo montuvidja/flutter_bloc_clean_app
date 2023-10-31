@@ -1,26 +1,21 @@
-part of 'add_category_imports.dart';
+part of 'update_category_imports.dart';
 
 @RoutePage<CategoryModel>()
-class AddCategory extends StatefulWidget {
-  const AddCategory({super.key});
-
+class UpdateCategory extends StatefulWidget {
+  const UpdateCategory({super.key, required this.category});
+  final Category category;
   @override
-  State<AddCategory> createState() => _AddCategoryState();
+  State<UpdateCategory> createState() => _UpdateCategoryState();
 }
 
-class _AddCategoryState extends State<AddCategory> {
+class _UpdateCategoryState extends State<UpdateCategory> {
   late CategoryCubit categoryCubit;
 
   @override
   void initState() {
     categoryCubit = CategoryCubit(repository: context.read<Repository>());
+    categoryCubit.textEditingController.text = widget.category.title.toString();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    categoryCubit.textEditingController.dispose();
-    super.dispose();
   }
 
   @override
@@ -33,7 +28,7 @@ class _AddCategoryState extends State<AddCategory> {
         ),
         backgroundColor: MyColors.primaryColor,
         title:
-            MyStrings.addCategory.text.size(16.sp).color(MyColors.white).make(),
+            MyStrings.updateCategory.text.size(16.sp).color(MyColors.white).make(),
       ),
       body: Form(
         key: categoryCubit.formKey,
@@ -56,11 +51,11 @@ class _AddCategoryState extends State<AddCategory> {
                 bloc: categoryCubit,
                 builder: (context, state) {
                   return RoundedPrimaryButton(
-                    title: MyStrings.add,
+                    title: MyStrings.update,
                     voidCallback: () {
-                      categoryCubit.addNewCategory(context);
+                      categoryCubit.updateCategory(context,widget.category.id.toString());
                     },
-                    isLoading: state is CategoryAddLoadingState,
+                    isLoading: state is CategoryUpdateLoadingState,
                   );
                 },
               )

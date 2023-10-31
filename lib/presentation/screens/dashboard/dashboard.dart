@@ -40,7 +40,12 @@ class _DashBoardState extends State<DashBoard> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages.elementAt(visit),
+      // IndexedStack is used to avoid call every time when switch tab from bottom bar
+      body: IndexedStack(
+        index: visit,
+        children: pages,
+      ),
+     // body: pages.elementAt(visit),
       bottomNavigationBar: BottomBarCreative(
         items: items,
         backgroundColor: MyColors.white,

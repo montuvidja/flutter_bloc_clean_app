@@ -1,26 +1,21 @@
-part of 'add_category_imports.dart';
+part of 'update_tag_imports.dart';
 
-@RoutePage<CategoryModel>()
-class AddCategory extends StatefulWidget {
-  const AddCategory({super.key});
-
+@RoutePage<TagsModel>()
+class UpdateTag extends StatefulWidget {
+  const UpdateTag({super.key, required this.tag});
+  final Tag tag;
   @override
-  State<AddCategory> createState() => _AddCategoryState();
+  State<UpdateTag> createState() => _UpdateTagState();
 }
 
-class _AddCategoryState extends State<AddCategory> {
-  late CategoryCubit categoryCubit;
+class _UpdateTagState extends State<UpdateTag> {
+  late TagsCubit tagsCubit;
 
   @override
   void initState() {
-    categoryCubit = CategoryCubit(repository: context.read<Repository>());
+    tagsCubit = TagsCubit(repository: context.read<Repository>());
+    tagsCubit.tagEditorController.text = widget.tag.title.toString();
     super.initState();
-  }
-
-  @override
-  void dispose() {
-    categoryCubit.textEditingController.dispose();
-    super.dispose();
   }
 
   @override
@@ -33,10 +28,10 @@ class _AddCategoryState extends State<AddCategory> {
         ),
         backgroundColor: MyColors.primaryColor,
         title:
-            MyStrings.addCategory.text.size(16.sp).color(MyColors.white).make(),
+            MyStrings.updateTag.text.size(16.sp).color(MyColors.white).make(),
       ),
       body: Form(
-        key: categoryCubit.formKey,
+        key: tagsCubit.fromKey,
         child: Padding(
           padding: const EdgeInsets.all(24.0),
           child: Column(
@@ -44,23 +39,23 @@ class _AddCategoryState extends State<AddCategory> {
             children: [
               MyStrings.title.text.size(14).fontWeight(FontWeight.w500).make(),
               RoundedCornerTextField(
-                controller: categoryCubit.textEditingController,
+                controller: tagsCubit.tagEditorController,
               ),
               15.h.heightBox,
               MyStrings.slug.text.size(14).fontWeight(FontWeight.w500).make(),
               RoundedCornerTextField(
-                controller: categoryCubit.textEditingController,
+                controller: tagsCubit.tagEditorController,
               ),
               const Spacer(),
-              BlocBuilder<CategoryCubit, CategoryState>(
-                bloc: categoryCubit,
+              BlocBuilder<TagsCubit, TagsState>(
+                bloc: tagsCubit,
                 builder: (context, state) {
                   return RoundedPrimaryButton(
-                    title: MyStrings.add,
+                    title: MyStrings.update,
                     voidCallback: () {
-                      categoryCubit.addNewCategory(context);
+                      tagsCubit.updateTag(context,widget.tag.id.toString());
                     },
-                    isLoading: state is CategoryAddLoadingState,
+                    isLoading: state is TagsUpdateLoadingState,
                   );
                 },
               )

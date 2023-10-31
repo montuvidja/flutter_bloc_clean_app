@@ -33,6 +33,7 @@ class HomeDetail extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.all(10.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 post.title!.text.bold.xl2.make(),
                 Row(

@@ -16,6 +16,13 @@ class _RegisterState extends State<Register> {
     authCubit = AuthCubit(repository: context.read<Repository>());
     super.initState();
   }
+
+  @override
+  void dispose() {
+    authCubit.emailController.dispose();
+    authCubit.passwordController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;

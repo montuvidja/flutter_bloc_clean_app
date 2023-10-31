@@ -40,13 +40,13 @@ class DioClient {
     }
   }
 
-  Future<Response> postRequest({required String uri, dynamic data}) async {
+  Future<Response> postRequest({required String uri, dynamic data, bool isTokenRequired = false}) async {
 
     _dio.interceptors.add(PrettyDioLogger());
-    var token = await Utils.getToken();
-    final options = Options(
-      headers: {"Authorization" : "Bearer $token"}
-    );
+    if(isTokenRequired == true){
+      var token = await Utils.getToken();
+      options.headers = baseOptions.headers..addAll({"Authorization" : "Bearer $token"});
+    }
   //  print("options... ${options.headers}");
     try {
       final Response response = await _dio.post(uri,data: data,options: options);

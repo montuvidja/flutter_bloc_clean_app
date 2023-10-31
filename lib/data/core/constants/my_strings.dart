@@ -24,6 +24,9 @@ class MyStrings {
   static const String seeAll = "See All";
   static const String categories = "Categories";
   static const String tags = "Tags";
+  static const String addTag = "Add Tag";
+  static const String updateTag = "Update Tag";
+  static const String updateCategory = "Update Category";
   static const String title = "Title";
   static const String slug = "Slug";
   static const String add = "Add";
